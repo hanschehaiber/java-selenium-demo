@@ -1,5 +1,6 @@
 package com.saucedemo;
 
+import com.saucedemo.pages.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
@@ -7,21 +8,35 @@ import org.junit.Assert;
 
 public class ProductPurchasesTest extends TestBase {
     @Test
-    public void testing() {
+    public void singleItemPurchaseTest() {
+        String username = "standard_user";
+        String password = "secret_sauce";
+        String firstName = "Jean-luc";
+        String lastName = "Picard";
+        String postalCode = "12345";
+
         driver.get("https://www.saucedemo.com");
-        WebElement element = driver.findElement(By.id("user-name"));
-        element.sendKeys("standard_user");
-        driver.findElement(By.id("password")).sendKeys("secret_sauce");
-        driver.findElement(By.id("login-button")).click();
-        driver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
-        driver.findElement(By.id("shopping_cart_container")).click();
-        driver.findElement(By.cssSelector("[data-test='checkout']")).click();
-        driver.findElement(By.id("first-name")).sendKeys("Jean-luc");
-        driver.findElement(By.id("last-name")).sendKeys("Picard");
-        driver.findElement(By.id("postal-code")).sendKeys("12345");
-        driver.findElement(By.id("continue")).click();
-        driver.findElement(By.id("finish")).click();
-        boolean checkoutCompleteContainerDisplayed = driver.findElement(By.id("checkout_complete_container")).isDisplayed();
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login(username, password);
+
+        ProductsPage productsPage = new ProductsPage(driver);
+        productsPage.clickAddBackpackToCart();
+        productsPage.navBarComponent.clickShoppingCart();
+
+        YourCartPage yourCartPage = new YourCartPage(driver);
+        yourCartPage.clickCheckout();
+
+        CheckoutInfoPage checkoutInfoPage = new CheckoutInfoPage(driver);
+        checkoutInfoPage.submitCheckoutInfo(firstName, lastName, postalCode);
+
+        CheckoutOverviewPage checkoutOverviewPage = new CheckoutOverviewPage(driver);
+        checkoutOverviewPage.clickFinishButton();
+
+        CheckoutCompletePage checkoutCompletePage = new CheckoutCompletePage(driver);
+        checkoutCompletePage.checkIfCheckoutCompleteIsDisplayed();
+
+        boolean checkoutCompleteContainerDisplayed = checkoutCompletePage.checkIfCheckoutCompleteIsDisplayed();
         Assert.assertTrue(checkoutCompleteContainerDisplayed);
     }
 }
