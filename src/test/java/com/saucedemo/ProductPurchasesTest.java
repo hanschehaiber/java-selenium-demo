@@ -34,7 +34,6 @@ public class ProductPurchasesTest extends TestBase {
         checkoutOverviewPage.clickFinishButton();
 
         CheckoutCompletePage checkoutCompletePage = new CheckoutCompletePage(driver);
-        checkoutCompletePage.checkIfCheckoutCompleteIsDisplayed();
 
         boolean checkoutCompleteContainerDisplayed = checkoutCompletePage.checkIfCheckoutCompleteIsDisplayed();
         Assert.assertTrue(checkoutCompleteContainerDisplayed);
